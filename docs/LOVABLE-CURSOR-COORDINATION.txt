@@ -1,0 +1,75 @@
+Project coordination: Lovable ↔ Cursor
+
+Purpose
+- Single source of truth for collaboration between Lovable and Cursor/local development.
+- Avoid file conflicts and clarify process. For app features, routes, data model, and planning/tracking, see docs/APP_OVERVIEW.md.
+
+Scope of this file
+- Coordination protocol, ownership boundaries, branching/PR rules
+- Routing and schema-change checklists
+- Environment/secrets handling
+- High-level coding conventions and references to design system
+
+Coordination protocol
+1) Claim a task
+   - Update docs/APP_OVERVIEW.md > Development tracking (Owner, Scope, Target files, ETA)
+   - If Lovable is active, avoid touching files it changed in the current session without coordination
+2) Branching
+   - feature/<area>-<short-desc> (e.g., feature/hr-recruitment-tabs)
+   - One logical change per PR
+3) Before you code
+   - Read docs/APP_OVERVIEW.md for architecture, routes, and data model
+   - Confirm guards (roles/permissions) and any DB changes required
+4) PR checklist
+   - npm run lint and npm run build pass
+   - No edits to read-only/generated files (see below)
+   - Update docs/APP_OVERVIEW.md (routes, components, tracking, decisions)
+   - Add screenshots/GIFs for UI changes
+5) Handoff back to Lovable
+   - Summarize changes at the top of docs/APP_OVERVIEW.md > Changelog
+   - If routes changed, note exact paths and guards
+
+Ownership boundaries
+- Do NOT edit (generated/managed):
+  - src/integrations/supabase/client.ts
+  - src/integrations/supabase/types.ts
+  - Build configs (vite/tailwind/eslint) unless coordinated
+- Centralized routing stays in src/App.tsx
+  - Keep new routes ABOVE "*" and wrap in <ProtectedRoute> as needed
+- UI system
+  - Use shadcn components under src/components/ui
+  - Use design tokens (index.css, tailwind.config.ts)
+  - No direct hex/rgb colors; prefer semantic tokens and component variants
+
+Routing & guards checklist
+- Create pages under src/pages or src/apps/<domain>/<feature>/pages
+- Register in src/App.tsx above the catch-all
+- Wrap with <ProtectedRoute requiredRole|requiredPermission>
+- If introducing a new URL segment, verify breadcrumbs in Navbar
+
+Schema changes workflow
+1) Add SQL migration under supabase/migrations
+2) Regenerate Supabase types (do not hand-edit types)
+3) Update hooks/components and RLS policies as needed
+- Data model, tables, and enums are documented in docs/APP_OVERVIEW.md
+
+Environment & secrets
+- Move Supabase URL and anon key to environment variables before production
+- Configure OAuth redirect URLs and CORS
+- Rotate keys as needed
+
+Coding conventions (summary)
+- Meaningful names, early returns, minimal nesting
+- Keep imports using @ alias
+- Prefer small, focused components; avoid monoliths
+- Use TanStack Query or internal hooks patterns where appropriate (see docs/APP_OVERVIEW.md > State & data access)
+
+Status sync
+- Update docs/APP_OVERVIEW.md headers (Last updated, Status) when starting/finishing a task
+- Log significant architectural decisions in its Decision log
+
+References
+- App details (features, routes, data model, roadmap, design system, workflows): docs/APP_OVERVIEW.md
+- Routes entry point: src/App.tsx
+- Auth/roles/permissions: src/contexts/AuthContext.tsx
+- Navbar/breadcrumbs: src/components/layout/Navbar.tsx
