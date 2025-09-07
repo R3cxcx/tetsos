@@ -20,7 +20,7 @@ const HRDashboard = () => {
       <div className="container mx-auto px-6 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Human Resources
+            Human Resources osaama
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Manage all aspects of human resources
@@ -37,7 +37,7 @@ const HRDashboard = () => {
                     <Settings className="h-8 w-8 text-primary" />
                   </div>
                   <CardTitle className="text-xl font-bold text-center mb-2">
-                    Recruitment
+                    Recruitment ossama
                   </CardTitle>
                   <CardDescription className="text-center text-sm">
                     Job postings, applications, and hiring process
